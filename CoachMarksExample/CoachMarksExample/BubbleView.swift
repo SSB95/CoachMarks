@@ -10,7 +10,9 @@ import Foundation
 import UIKit
 
 let ARROW_SIZE = 6
+let ARROW_SPACE = 6
 let PADDING = 8.0
+let RADIUS = 6.0
 
 class BubbleView: UIView {
 	enum ArrowPosition {
@@ -46,15 +48,15 @@ class BubbleView: UIView {
 		super.init(coder: aDecoder)
 	}
 	
-	func sizeWithFont() -> CGSize {
+    func size(with font: UIFont) -> CGSize {
 		var width = CGFloat(PADDING * 3)
 		var height = CGFloat(PADDING * 2.5)
 		let frame = UIApplication.shared.keyWindow?.frame
 		
 		if (title != nil && frame != nil && (arrowPosition == .left || arrowPosition == .right)) {
 			let widthDelta = CGFloat(ARROW_SIZE)
-			let boundingSize = CGSize(width: frame!.size.width - widthDelta - CGFloat(PADDING * 3), height: CGFloat(FLT_MAX))
-			let result = title!.boundingRect(with: boundingSize, options: .usesDeviceMetrics, attributes: nil, context: nil)
+			let boundingSize = CGSize(width: frame!.size.width - widthDelta - CGFloat(PADDING * 3), height: CGFloat(Float.greatestFiniteMagnitude))
+            let result = title!.boundingRect(with: boundingSize, options: .usesDeviceMetrics, attributes: [NSFontAttributeName: font], context: nil)
 			
 			width += result.width
 			height += result.height
@@ -62,51 +64,70 @@ class BubbleView: UIView {
 		
 		return CGSize(width: width, height: height)
 	}
-	
+    
+    func calulateFrame(with font: UIFont) -> CGRect {
+        // Calculate bubble position
+        var x = frame.origin.x
+        var y = frame.origin.y
+        
+        let size = self.size(with: font)
+        
+        var widthDelta = 0, heightDelta = 0
+        
+        if (arrowPosition == .left || arrowPosition == .right) {
+            y += frame.size.height / 2 - size.height / 2
+            x += (arrowPosition == .left ? CGFloat(ARROW_SPACE) + frame.size.height : -(CGFloat(ARROW_SPACE) * 2 + size.width))
+            widthDelta = ARROW_SIZE
+        } else {
+            x += frame.size.height / 2 - size.height / 2
+            y += (arrowPosition == .left ? CGFloat(ARROW_SPACE) + frame.size.height : -(CGFloat(ARROW_SPACE) * 2 + size.width))
+            heightDelta = ARROW_SIZE
+        }
+        
+        return CGRect(x: x, y: y, width: size.width + CGFloat(widthDelta), height: size.height + CGFloat(heightDelta))
+    }
+    
+    var offsets: CGSize {
+        return CGSize(width: arrowPosition == .left ? ARROW_SIZE : 0, height: arrowPosition == .top ? ARROW_SIZE : 0)
+    }
 	
 	// MARK:- Drawing & Animation
 	override func draw(_ rect: CGRect) {
-//		CGContextRef ctx = UIGraphicsGetCurrentContext();
-//		CGContextSaveGState(ctx);
-//		
-//		CGSize size = [self sizeWithFont:[self font]];
-//		
-//		CGPathRef clippath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake([self offsets].width,[self offsets].height, size.width, size.height) cornerRadius:RADIUS].CGPath;
-//		CGContextAddPath(ctx, clippath);
-//		
-//		CGContextSetFillColorWithColor(ctx, self.color.CGColor);
-//		
-//		CGContextClosePath(ctx);
-//		CGContextFillPath(ctx);
-//		
-//		[self.color set];
-//		
-//		//  tip of arrow needs to be centered under highlighted region
-//		//  this center area is always arrow size divided by 2
-//		float center = ARROW_SIZE/2;
-//		
-//		//  points used to draw arrow
-//		//  Wide Arrow --> x = center + - ArrowSize
-//		//  Skinny Arrow --> x = center + - center
-//		//  Normal Arrow -->
-//		CGPoint startPoint = CGPointMake(center - ARROW_SIZE, ARROW_SIZE);
-//		CGPoint midPoint = CGPointMake(center, 0);
-//		CGPoint endPoint = CGPointMake(center + ARROW_SIZE, ARROW_SIZE);
-//		
-//		
-//		UIBezierPath *path = [UIBezierPath bezierPath];
-//		[path moveToPoint:startPoint];
-//		[path addLineToPoint:endPoint];
-//		[path addLineToPoint:midPoint];
-//		[path addLineToPoint:startPoint];
 		
-		let ctx = UIGraphicsGetCurrentContext()
+        guard let ctx = UIGraphicsGetCurrentContext() else {
+            super.draw(rect)
+            print("BubbleView#draw Couldn't get graphics context")
+            return
+        }
 		
+		ctx.saveGState()
 		
-		ctx?.saveGState()
+        let size = self.size(with: font)
+        
+        let clipPath = UIBezierPath(roundedRect: CGRect(x: offsets.width, y: offsets.height, width: size.width, height: size.height), cornerRadius: CGFloat(RADIUS)).cgPath
 		
-//		let size = sizeWithFont()
-		
+        ctx.addPath(clipPath)
+        ctx.fillPath()
+    
+        color.set()
+        
+        // Tip of the arrow needs to be centered under highlighted region
+        // This center area is always arrow size divided by 2
+        let center = ARROW_SIZE / 2
+        
+        //  points used to draw arrow
+        //  Wide Arrow --> x = center + - ArrowSize
+        //  Skinny Arrow --> x = center + - center
+        //  Normal Arrow -->
+        let startPoint = CGPoint(x: center - ARROW_SIZE, y: ARROW_SIZE)
+        let midPoint = CGPoint(x: center, y: 0)
+        let endPoint = CGPoint(x: center + ARROW_SIZE, y: ARROW_SIZE)
+        
+        let path = UIBezierPath()
+        path.move(to: startPoint)
+        path.addLine(to: endPoint)
+        path.addLine(to: midPoint)
+        path.addLine(to: startPoint)
 	}
 	
 	func animate() {
@@ -115,29 +136,3 @@ class BubbleView: UIView {
 		}, completion: nil)
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
