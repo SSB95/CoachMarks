@@ -66,25 +66,25 @@ class BubbleView: UIView {
     }
 
     func calulateFrame(with font: UIFont) -> CGRect {
-            // Calculate bubble position
-            var x = frame.origin.x
-            var y = frame.origin.y
+        // Calculate bubble position
+        var x = frame.origin.x
+        var y = frame.origin.y
 
-            let size = self.size(with: font)
+        let size = self.size(with: font)
 
-            var widthDelta = 0, heightDelta = 0
+        var widthDelta = 0, heightDelta = 0
 
-            if (arrowPosition == .left || arrowPosition == .right) {
-                    y += frame.size.height / 2 - size.height / 2
-                    x += (arrowPosition == .left ? CGFloat(ARROW_SPACE) + frame.size.height : -(CGFloat(ARROW_SPACE) * 2 + size.width))
-                    widthDelta = ARROW_SIZE
-            } else {
-                    x += frame.size.height / 2 - size.height / 2
-                    y += (arrowPosition == .left ? CGFloat(ARROW_SPACE) + frame.size.height : -(CGFloat(ARROW_SPACE) * 2 + size.width))
-                    heightDelta = ARROW_SIZE
-            }
+        if (arrowPosition == .left || arrowPosition == .right) {
+                y += frame.size.height / 2 - size.height / 2
+                x += (arrowPosition == .left ? CGFloat(ARROW_SPACE) + frame.size.height : -(CGFloat(ARROW_SPACE) * 2 + size.width))
+                widthDelta = ARROW_SIZE
+        } else {
+                x += frame.size.height / 2 - size.height / 2
+                y += (arrowPosition == .left ? CGFloat(ARROW_SPACE) + frame.size.height : -(CGFloat(ARROW_SPACE) * 2 + size.width))
+                heightDelta = ARROW_SIZE
+        }
 
-            return CGRect(x: x, y: y, width: size.width + CGFloat(widthDelta), height: size.height + CGFloat(heightDelta))
+        return CGRect(x: x, y: y, width: size.width + CGFloat(widthDelta), height: size.height + CGFloat(heightDelta))
     }
 
     var offsets: CGSize {
