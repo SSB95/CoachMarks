@@ -75,13 +75,13 @@ class BubbleView: UIView {
         var widthDelta = 0, heightDelta = 0
 
         if (arrowPosition == .left || arrowPosition == .right) {
-                y += frame.size.height / 2 - size.height / 2
-                x += (arrowPosition == .left ? CGFloat(ARROW_SPACE) + frame.size.height : -(CGFloat(ARROW_SPACE) * 2 + size.width))
-                widthDelta = ARROW_SIZE
+            y += frame.size.height / 2 - size.height / 2
+            x += (arrowPosition == .left ? CGFloat(ARROW_SPACE) + frame.size.height : -(CGFloat(ARROW_SPACE) * 2 + size.width))
+            widthDelta = ARROW_SIZE
         } else {
-                x += frame.size.height / 2 - size.height / 2
-                y += (arrowPosition == .left ? CGFloat(ARROW_SPACE) + frame.size.height : -(CGFloat(ARROW_SPACE) * 2 + size.width))
-                heightDelta = ARROW_SIZE
+            x += frame.size.height / 2 - size.height / 2
+            y += (arrowPosition == .left ? CGFloat(ARROW_SPACE) + frame.size.height : -(CGFloat(ARROW_SPACE) * 2 + size.width))
+            heightDelta = ARROW_SIZE
         }
 
         return CGRect(x: x, y: y, width: size.width + CGFloat(widthDelta), height: size.height + CGFloat(heightDelta))
@@ -95,9 +95,9 @@ class BubbleView: UIView {
     override func draw(_ rect: CGRect) {
 
         guard let ctx = UIGraphicsGetCurrentContext() else {
-                super.draw(rect)
-                print("BubbleView#draw Couldn't get graphics context")
-                return
+            super.draw(rect)
+            print("BubbleView#draw Couldn't get graphics context")
+            return
         }
 
         ctx.saveGState()
