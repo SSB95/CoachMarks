@@ -61,6 +61,8 @@ class BubbleView: UIView {
             width += result.width
             height += result.height
         }
+        
+        // TODO: Calculate size for bubbles with no title
 
         return CGSize(width: width, height: height)
     }
