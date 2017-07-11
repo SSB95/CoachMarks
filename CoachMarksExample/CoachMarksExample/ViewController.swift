@@ -44,8 +44,8 @@ class ViewController: UIViewController {
         ]
         
         // let coachMarksView = CoachMarksView(with: self.view.bounds, coachMarks: coachMarks)
-        let coachMarksView = CoachMarksView()
-        
+        let coachMarksView = CoachMarksView(frame: self.view.bounds, coachMarks: coachMarks)
+      
         self.view.addSubview(coachMarksView)
         coachMarksView.start()
     }
