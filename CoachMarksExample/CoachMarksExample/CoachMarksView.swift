@@ -114,7 +114,7 @@ class CoachMarksView: UIView {
         anim.duration = CFTimeInterval(animationDuration)
         anim.isRemovedOnCompletion = false
         anim.fillMode = kCAFillModeForwards
-        anim.fromValue = shapeLayerMask.mask
+        anim.fromValue = shapeLayerMask.path
         anim.toValue = maskPath.cgPath
         shapeLayerMask.add(anim, forKey: "path")
         shapeLayerMask.path = maskPath.cgPath
