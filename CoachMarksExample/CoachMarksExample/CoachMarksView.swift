@@ -28,7 +28,7 @@ class CoachMarksView: UIView {
     
     var focusView: FocusView?
     var bubble: BubbleView?
-    
+  
     var shapeLayerMask: CAShapeLayer
     var markIndex: Int = 0
 //    var lblContinue: UILabel
@@ -114,7 +114,7 @@ class CoachMarksView: UIView {
         anim.duration = CFTimeInterval(animationDuration)
         anim.isRemovedOnCompletion = false
         anim.fillMode = kCAFillModeForwards
-        anim.fromValue = shapeLayerMask.mask
+        anim.fromValue = shapeLayerMask.path
         anim.toValue = maskPath.cgPath
         shapeLayerMask.add(anim, forKey: "path")
         shapeLayerMask.path = maskPath.cgPath
@@ -231,13 +231,13 @@ class CoachMarksView: UIView {
         }
         
         // Return if no text for bubble
-        if (markCaption != nil && !markCaption!.isEmpty) {
+        if (markCaption == nil || markCaption!.isEmpty) {
             return
         }
         
         // Create Bubble
         // Use POI if available, else use the cutout frame
-        bubble = BubbleView(frame: poi ?? frame, text: markCaption!)
+        bubble = BubbleView(frame: poi ?? frame, title: markCaption!, text: "", arrowPosition: .top, color: nil, font: font)
         bubble!.font = font ?? bubble!.font
         bubble!.alpha = 0.0
         addSubview(bubble!)
