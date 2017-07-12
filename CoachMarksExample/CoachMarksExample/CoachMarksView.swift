@@ -108,7 +108,7 @@ class CoachMarksView: UIView {
         maskPath.append(cutoutPath)
         
         // Animate it
-        var anim = CABasicAnimation(keyPath: "path")
+        let anim = CABasicAnimation(keyPath: "path")
         anim.delegate = self
         anim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
         anim.duration = CFTimeInterval(animationDuration)
@@ -183,7 +183,7 @@ class CoachMarksView: UIView {
 
         let coachMarkInfo = coachMarks[markIndex]
         let frame = coachMarkInfo["rect"] as! CGRect
-        let shouldAnimateSwipe = coachMarkInfo["swipe"] as? Bool ?? true
+        let shouldAnimateSwipe = coachMarkInfo["swipe"] as? Bool ?? false
         
         var direction: FocusView.FocusSwipeDirection = .leftToRight
         if let d = coachMarkInfo["direction"] as? FocusView.FocusSwipeDirection {
