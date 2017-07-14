@@ -24,12 +24,12 @@ class FocusView: UIView {
     }
     
     override init(frame: CGRect) {
-        super.init(frame: frame)
+        super.init(frame: CGRect(x: 10, y: 0, width: 40, height: 40))
 
         let shapeLayer = self.layer as! CAShapeLayer
         
         shapeLayer.path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 40, height: 40)).cgPath
-        shapeLayer.backgroundColor = UIColor.white.cgColor
+        shapeLayer.fillColor = UIColor.white.cgColor
         shapeLayer.shadowRadius = 8
         shapeLayer.shadowOffset = CGSize(width: 0, height: 0)
         shapeLayer.shadowColor = UIColor(red: 0, green: 0.299, blue: 0.715, alpha: 1.0).cgColor
@@ -101,19 +101,19 @@ class FocusView: UIView {
         centerY(view: view, in: frame)
     }
     
-    func centerX(view: UIView, in frame: CGRect) {
-        let centerX = frame.origin.x + (frame.height /  2)
-        let offsetX = 260 / 2
-        let newX = centerX + CGFloat(offsetX)
-        
-        view.frame = CGRect(x: newX, y: view.frame.origin.y, width: 40, height: 40)
-    }
-    
     func centerY(view: UIView, in frame: CGRect) {
         let centerY = frame.origin.y + (frame.height / 2)
         let offsetY = frame.height / 2
         let newY = centerY - offsetY
         
         view.frame = CGRect(x: view.frame.origin.x, y: newY, width: 40, height: 40)
+    }
+    
+    func centerX(view: UIView, in frame: CGRect) {
+        let centerX = frame.origin.x + (frame.width / 2)
+        let offsetX = 260 / 2
+        let newX = centerX - CGFloat(offsetX)
+        
+        view.frame = CGRect(x: newX, y: view.frame.origin.y, width: 40, height: 40)
     }
 }
