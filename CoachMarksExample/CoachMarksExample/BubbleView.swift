@@ -92,43 +92,36 @@ class BubbleView: UIView {
     }
 
     func size(with font: UIFont) -> CGSize {
-        var width = CGFloat(PADDING * 3)
-        var height = CGFloat(PADDING * 2.5)
-        let frame = UIApplication.shared.keyWindow?.frame
         
+        let frame = UIApplication.shared.keyWindow!.frame
         var widthDelta = CGFloat(0)
         
         if (arrowPosition == .left || arrowPosition == .right) {
             widthDelta = CGFloat(ARROW_SIZE)
         }
         
-        let boundingSize = CGSize(width: frame!.size.width - widthDelta - CGFloat(PADDING * 3), height: CGFloat(Float.greatestFiniteMagnitude))
+        let boundingSize = CGSize(width: frame.size.width - widthDelta - CGFloat(PADDING * 3.0), height: CGFloat.greatestFiniteMagnitude)
+        let result = NSString(string: title!).boundingRect(with: boundingSize, options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName : font], context: nil).size
         
-        let result = title!.boundingRect(with: boundingSize, options: .usesDeviceMetrics, attributes: [NSFontAttributeName: font], context: nil)
-        
-        width += result.width
-        height += result.height
-        // TODO: Calculate size for bubbles with no title
-
-        return CGSize(width: width, height: height)
+        return CGSize(width: result.width + CGFloat(PADDING * 3.0), height: result.height + CGFloat(PADDING * 2.5))
     }
 
     func calulateFrame(with font: UIFont) -> CGRect {
         // Calculate bubble position
-        var x = frame.origin.x
-        var y = frame.origin.y
-
+        var x = attachedFrame.origin.x
+        var y = attachedFrame.origin.y
+      
         let size = self.size(with: font)
 
         var widthDelta = 0, heightDelta = 0
 
         if (arrowPosition == .left || arrowPosition == .right) {
-            y += frame.size.height / 2 - size.height / 2
-            x += arrowPosition == .left ? CGFloat(ARROW_SPACE) + frame.size.height : -(CGFloat(ARROW_SPACE) * 2 + size.width)
+            y += attachedFrame.size.height / 2 - size.height / 2
+            x += arrowPosition == .left ? CGFloat(ARROW_SPACE) + attachedFrame.size.width : -(CGFloat(ARROW_SPACE) * 2 + size.width)
             widthDelta = ARROW_SIZE
         } else {
-            x += frame.size.width / 2 - size.width / 2
-            y += arrowPosition == .top ? CGFloat(ARROW_SPACE) + frame.size.height : -(CGFloat(ARROW_SPACE) * 2 + size.height)
+            x += attachedFrame.size.width / 2 - size.width / 2
+            y += arrowPosition == .top ? CGFloat(ARROW_SPACE) + attachedFrame.size.height : -(CGFloat(ARROW_SPACE) * 2 + size.height)
             heightDelta = ARROW_SIZE
         }
 
@@ -151,10 +144,10 @@ class BubbleView: UIView {
         ctx.saveGState()
 
         let size = self.size(with: font)
-
-        let clipPath = UIBezierPath(roundedRect: CGRect(x: offsets.width, y: offsets.height, width: size.width, height: size.height), cornerRadius: CGFloat(RADIUS)).cgPath
-
-        ctx.addPath(clipPath)
+        
+        let clipPath = UIBezierPath(roundedRect: CGRect(x: offsets.width, y: offsets.height, width: size.width, height: size.height), cornerRadius: CGFloat(RADIUS))
+      
+        ctx.addPath(clipPath.cgPath)
         ctx.setFillColor(color.cgColor)
         ctx.closePath()
         ctx.fillPath()
