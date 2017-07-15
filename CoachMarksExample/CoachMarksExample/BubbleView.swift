@@ -56,7 +56,7 @@ class BubbleView: UIView {
         self.arrowPosition = arrowPosition
         self.backgroundColor = UIColor.clear
         
-        self.frame = calulateFrame(with: self.font)
+        self.frame = calculateFrame(with: self.font)
         fixFrameIfOutOfBounds()
         
         // Make it pass touch events through to the CoachMarksView
@@ -106,7 +106,7 @@ class BubbleView: UIView {
         return CGSize(width: result.width + CGFloat(PADDING * 3.0), height: result.height + CGFloat(PADDING * 2.5))
     }
 
-    func calulateFrame(with font: UIFont) -> CGRect {
+    func calculateFrame(with font: UIFont) -> CGRect {
         // Calculate bubble position
         var x = attachedFrame.origin.x
         var y = attachedFrame.origin.y
@@ -247,14 +247,14 @@ class BubbleView: UIView {
             arrowPosition = .bottom
             
             // Restart the entire process
-            let flippedFrame = calulateFrame(with: font)
+            let flippedFrame = calculateFrame(with: font)
             y = flippedFrame.origin.y
             height = flippedFrame.size.height
         } else if (arrowPosition == .bottom && y < 0) {
             arrowPosition = .top
             
             // Restart the entire process
-            let flippedFrame = calulateFrame(with: font)
+            let flippedFrame = calculateFrame(with: font)
             y = flippedFrame.origin.y
             height = flippedFrame.size.height
         }
