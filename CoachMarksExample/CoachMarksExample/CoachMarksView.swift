@@ -9,11 +9,7 @@
 import Foundation
 import UIKit
 
-let kAnimationDuration = 0.3
-let kCutoutRadius = 2.0
-let kMaxLblWidth = 230.0
-let kLblSpacing = 35.0
-
+// MARK: - CoachMarksView Delegate
 protocol CoachMarksViewDelegate: class {
     func coachMarksView(_ coachMarksView: CoachMarksView, willNavigateTo index: Int)
     func coachMarksView(_ coachMarksView: CoachMarksView, didNavigateTo index: Int)
@@ -22,29 +18,37 @@ protocol CoachMarksViewDelegate: class {
     func didTap(at index: Int)
 }
 
+/// Handles cycling through and displaying CoachMarks
 class CoachMarksView: UIView {
     
     typealias CoachMark = [String:Any]
     
+    // MARK:- Properties
+    
     var focusView: FocusView?
     var bubble: BubbleView?
-  
-    var shapeLayerMask: CAShapeLayer
-    var markIndex: Int = 0
-//    var lblContinue: UILabel
+    
+    /// A layer that overlays the entire app screen to allow for accenting the focusView
+    var overlay: CAShapeLayer
+    var overlayColor: UIColor = UIColor.white
+    
     weak var delegate: CoachMarksViewDelegate?
+    
     var coachMarks: [CoachMark]
-    var maskColor: UIColor = UIColor.white
+    var markIndex: Int = 0
+    
     var animationDuration: CGFloat = 0.3
-    var cutoutRadius: CGFloat = CGFloat(kCutoutRadius)
-    var maxLblWidth: CGFloat = CGFloat(kMaxLblWidth)
-    var lblSpacing: CGFloat = CGFloat(kLblSpacing)
+    var cutoutRadius: CGFloat = 2.0
+    var maxLblWidth: CGFloat = 230
+    var lblSpacing: CGFloat = 35
     var useBubbles: Bool = true
+    
+    // MARK:- Init
     
     init(frame: CGRect, coachMarks: [CoachMark]) {
         
         self.coachMarks = coachMarks
-        self.shapeLayerMask = CAShapeLayer()
+        self.overlay = CAShapeLayer()
         
         super.init(frame: frame)
         setup()
@@ -54,13 +58,14 @@ class CoachMarksView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    /// Configures overlay and touch gesture recognizers
     func setup() {
-        // Shape layer mask
-        shapeLayerMask.fillRule = kCAFillRuleEvenOdd
-        shapeLayerMask.fillColor = UIColor(white: 0.0, alpha: 0.8).cgColor
-        layer.addSublayer(shapeLayerMask)
+        // Overlay config
+        overlay.fillRule = kCAFillRuleEvenOdd
+        overlay.fillColor = UIColor(white: 0.0, alpha: 0.8).cgColor
+        layer.addSublayer(overlay)
         
-        // Capture touches
+        // Gesture recognizer config
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(userDidTap(_:)))
         let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(userDidTap(_:)))
         swipeGestureRecognizer.direction = [.left, .right]
@@ -71,7 +76,24 @@ class CoachMarksView: UIView {
         isHidden = true
     }
     
-    // MARK: Cutout Modify
+    /// Starts CoachMark process with first CoachMark
+    func start() {
+        
+        guard coachMarks.count > 0 else {
+            return
+        }
+        
+        // Fade in self
+        alpha = 0.0
+        isHidden = false
+        UIView.animate(withDuration: Double(self.animationDuration), animations: {
+            self.alpha = 1.0
+        }, completion: { finished in
+            self.goToCoachmark(index: 0)
+        })
+    }
+    
+    // MARK:- Cutout Modification
     func setCutout(to rect: CGRect, with shape: String) {
         // Define shape
         let maskPath = UIBezierPath(rect: bounds)
@@ -88,9 +110,17 @@ class CoachMarksView: UIView {
         maskPath.append(cutoutPath)
         
         // Set the new path
-        shapeLayerMask.path = maskPath.cgPath
+        overlay.path = maskPath.cgPath
         
     }
+ 
+    // MARK:- Overlay Color
+    func setOverlayColor(color: UIColor) {
+        overlayColor = color
+        overlay.fillColor = overlayColor.cgColor
+    }
+    
+    // MARK:- Animation
     
     func animateCutout(to rect: CGRect, with shape: String) {
         // Define shape
@@ -114,34 +144,10 @@ class CoachMarksView: UIView {
         anim.duration = CFTimeInterval(animationDuration)
         anim.isRemovedOnCompletion = false
         anim.fillMode = kCAFillModeForwards
-        anim.fromValue = shapeLayerMask.path
+        anim.fromValue = overlay.path
         anim.toValue = maskPath.cgPath
-        shapeLayerMask.add(anim, forKey: "path")
-        shapeLayerMask.path = maskPath.cgPath
-    }
- 
-    // MARK: Mask Color
-    func setMaskColor(color: UIColor) {
-        maskColor = color
-        shapeLayerMask.fillColor = maskColor.cgColor
-    }
-
-    func userDidTap(_ recognizer: UIGestureRecognizer) {
-        delegate?.didTap(at: markIndex)
-        
-        // Go to the next coach mark
-         goToCoachmark(index: markIndex+1)
-    }
-    
-    func start() {
-        // Fade in self
-        alpha = 0.0
-        isHidden = false
-        UIView.animate(withDuration: Double(self.animationDuration), animations: {
-            self.alpha = 1.0
-        }, completion: { finished in
-            self.goToCoachmark(index: 0)
-        })
+        overlay.add(anim, forKey: "path")
+        overlay.path = maskPath.cgPath
     }
     
     func goToCoachmark(index: Int) {
@@ -237,7 +243,7 @@ class CoachMarksView: UIView {
         
         // Create Bubble
         // Use POI if available, else use the cutout frame
-        bubble = BubbleView(frame: poi ?? frame, title: markCaption!, text: "", arrowPosition: .top, color: nil, font: font)
+        bubble = BubbleView(frame: poi ?? frame, text: markCaption!, arrowPosition: .top, color: nil, font: font)
         bubble!.font = font ?? bubble!.font
         bubble!.alpha = 0.0
         addSubview(bubble!)
@@ -249,6 +255,14 @@ class CoachMarksView: UIView {
         }, completion: nil)
     }
     
+    // MARK:- Gestures
+    
+    func userDidTap(_ recognizer: UIGestureRecognizer) {
+        delegate?.didTap(at: markIndex)
+        
+        // Go to the next coach mark
+        goToCoachmark(index: markIndex+1)
+    }
     
     func cleanup() {
 
@@ -273,6 +287,8 @@ class CoachMarksView: UIView {
     }
 
 }
+
+// MARK:- CAAnimation Delegate
 
 extension CoachMarksView: CAAnimationDelegate {
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
