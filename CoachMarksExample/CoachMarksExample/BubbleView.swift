@@ -9,12 +9,11 @@
 import Foundation
 import UIKit
 
-let ARROW_SIZE = 6
-let ARROW_SPACE = 6
-let PADDING = 8.0
-let RADIUS = 6.0
-
+/// The view in charge of displaying the text around the focus area
 class BubbleView: UIView {
+    
+    // MARK:- ArrowPosition
+    
     enum ArrowPosition {
         case top
         case bottom
@@ -22,25 +21,44 @@ class BubbleView: UIView {
         case right
     }
     
-    var arrowOffset: CGFloat = 0.0
+    // MARK:- Properties
+    
+    let arrowHeight: CGFloat = 12
+    
+    /// Space between arrow and highlighted region
+    let arrowSpace: CGFloat = 6
+    
+    /// Padding between text and border of bubble
+    let textPadding: CGFloat = 8.0
+    
+    /// Corner radius of bubble
+    let cornerRadius: CGFloat = 6.0
+    
+    /// X-offset from left
+    var arrowOffset: CGFloat = 0
+    
     var arrowPosition: ArrowPosition = .top
-    var title: String?
-    var text: String
+    
+    var text: String?
+    
+    /// Color of the bubble
     var color: UIColor = UIColor.white
     var bouncing: Bool = true
-    var animationShouldStop: Bool = false
-    var attachedFrame: CGRect = CGRect.zero
     
-    // can I check project's default font???
+    var attachedFrame: CGRect = CGRect.zero
     var font: UIFont = UIFont.systemFont(ofSize: 14)
-
+    
+    var animationShouldStop: Bool = false
+    
+    // MARK:- Init
+    
     init(frame: CGRect, text: String) {
         self.text = text
         self.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
         super.init(frame: frame)
     }
     
-    convenience init(frame: CGRect, title: String, text: String, arrowPosition: ArrowPosition, color: UIColor?, font: UIFont? = nil) {
+    convenience init(frame: CGRect, text: String, arrowPosition: ArrowPosition, color: UIColor?, font: UIFont? = nil) {
         self.init(frame: frame, text: text)
         
         if color != nil {
@@ -51,28 +69,28 @@ class BubbleView: UIView {
             self.font = font!
         }
         
-        self.attachedFrame = frame
-        self.title = title
+        self.text = text
         self.arrowPosition = arrowPosition
         self.backgroundColor = UIColor.clear
         
-        self.frame = calculateFrame(with: self.font)
+        self.attachedFrame = frame
+        self.frame = bubbleViewFrame
         fixFrameIfOutOfBounds()
         
         // Make it pass touch events through to the CoachMarksView
         isUserInteractionEnabled = false
         
         // Calculate and position text
-        let actualXPosition = self.offsets.width + CGFloat((PADDING * 1.5))
-        let actualYPosition = self.offsets.height + CGFloat((PADDING * 1.25))
-        let actualWidth = self.frame.size.width - actualXPosition - CGFloat((PADDING * 1.5))
-        let actualHeight = self.frame.size.height - actualYPosition - CGFloat((PADDING * 1.2))
+        let actualXPosition = self.offsets.width + textPadding * 1.5
+        let actualYPosition = self.offsets.height + textPadding * 1.25
+        let actualWidth = self.frame.size.width - actualXPosition - textPadding * 1.5
+        let actualHeight = self.frame.size.height - actualYPosition - textPadding * 1.2
         
         let label = UILabel(frame: CGRect(x: actualXPosition, y: actualYPosition, width: actualWidth, height: actualHeight))
         label.font = self.font
         label.textColor = UIColor.black
         label.alpha = 0.9
-        label.text = title
+        label.text = text
         label.backgroundColor = UIColor.clear
         label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 0
@@ -90,46 +108,52 @@ class BubbleView: UIView {
         self.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
         super.init(coder: aDecoder)
     }
-
-    func size(with font: UIFont) -> CGSize {
+    
+    // MARK:- Sizing
+    
+    /// The size of bubble
+    /// - Note: This size does NOT include the arrow
+    var bubbleSize: CGSize {
         
         let frame = UIApplication.shared.keyWindow!.frame
         var widthDelta = CGFloat(0)
         
         if (arrowPosition == .left || arrowPosition == .right) {
-            widthDelta = CGFloat(ARROW_SIZE)
+            widthDelta = CGFloat(arrowHeight)
         }
         
-        let boundingSize = CGSize(width: frame.size.width - widthDelta - CGFloat(PADDING * 3.0), height: CGFloat.greatestFiniteMagnitude)
-        let result = NSString(string: title!).boundingRect(with: boundingSize, options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName : font], context: nil).size
+        let boundingSize = CGSize(width: frame.size.width - widthDelta - textPadding * 3.0, height: CGFloat.greatestFiniteMagnitude)
+        let result = NSString(string: text!).boundingRect(with: boundingSize, options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName : font], context: nil).size
         
-        return CGSize(width: result.width + CGFloat(PADDING * 3.0), height: result.height + CGFloat(PADDING * 2.5))
+        return CGSize(width: result.width + textPadding * 3.0, height: result.height + textPadding * 2.5)
     }
-
-    func calculateFrame(with font: UIFont) -> CGRect {
+    
+    /// The frame of the entire BubbleView, including the arrow
+    var bubbleViewFrame: CGRect {
         // Calculate bubble position
         var x = attachedFrame.origin.x
         var y = attachedFrame.origin.y
       
-        let size = self.size(with: font)
+        let size = bubbleSize
 
-        var widthDelta = 0, heightDelta = 0
+        var widthDelta: CGFloat = 0, heightDelta: CGFloat = 0
 
         if (arrowPosition == .left || arrowPosition == .right) {
             y += attachedFrame.size.height / 2 - size.height / 2
-            x += arrowPosition == .left ? CGFloat(ARROW_SPACE) + attachedFrame.size.width : -(CGFloat(ARROW_SPACE) * 2 + size.width)
-            widthDelta = ARROW_SIZE
+            x += arrowPosition == .left ? arrowSpace + attachedFrame.size.width : -(arrowSpace * 2 + size.width)
+            widthDelta = arrowHeight
         } else {
             x += attachedFrame.size.width / 2 - size.width / 2
-            y += arrowPosition == .top ? CGFloat(ARROW_SPACE) + attachedFrame.size.height : -(CGFloat(ARROW_SPACE) * 2 + size.height)
-            heightDelta = ARROW_SIZE
+            y += arrowPosition == .top ? arrowSpace + attachedFrame.size.height : -(arrowSpace * 2 + size.height)
+            heightDelta = arrowHeight
         }
 
-        return CGRect(x: x, y: y, width: size.width + CGFloat(widthDelta), height: size.height + CGFloat(heightDelta))
+        return CGRect(x: x, y: y, width: size.width + widthDelta, height: size.height + heightDelta)
     }
-
+    
+    /// Offsets to account for the arrow position
     var offsets: CGSize {
-        return CGSize(width: arrowPosition == .left ? ARROW_SIZE : 0, height: arrowPosition == .top ? ARROW_SIZE : 0)
+        return CGSize(width: arrowPosition == .left ? arrowHeight : 0, height: arrowPosition == .top ? arrowHeight : 0)
     }
 
     // MARK:- Drawing & Animation
@@ -143,9 +167,9 @@ class BubbleView: UIView {
 
         ctx.saveGState()
 
-        let size = self.size(with: font)
+        let size = bubbleSize
         
-        let clipPath = UIBezierPath(roundedRect: CGRect(x: offsets.width, y: offsets.height, width: size.width, height: size.height), cornerRadius: CGFloat(RADIUS))
+        let clipPath = UIBezierPath(roundedRect: CGRect(x: offsets.width, y: offsets.height, width: size.width, height: size.height), cornerRadius: cornerRadius)
       
         ctx.addPath(clipPath.cgPath)
         ctx.setFillColor(color.cgColor)
@@ -155,15 +179,15 @@ class BubbleView: UIView {
 
         // Tip of the arrow needs to be centered under highlighted region
         // This center area is always arrow size divided by 2
-        let center = ARROW_SIZE / 2
+        let center = arrowHeight / 2
 
         //  points used to draw arrow
         //  Wide Arrow --> x = center + - ArrowSize
         //  Skinny Arrow --> x = center + - center
         //  Normal Arrow -->
-        let startPoint = CGPoint(x: center - ARROW_SIZE, y: ARROW_SIZE)
+        let startPoint = CGPoint(x: center - arrowHeight, y: arrowHeight)
         let midPoint = CGPoint(x: center, y: 0)
-        let endPoint = CGPoint(x: center + ARROW_SIZE, y: ARROW_SIZE)
+        let endPoint = CGPoint(x: center + arrowHeight, y: arrowHeight)
 
         let path = UIBezierPath()
         path.move(to: startPoint)
@@ -171,8 +195,7 @@ class BubbleView: UIView {
         path.addLine(to: midPoint)
         path.addLine(to: startPoint)
         
-        let arrowSize = CGFloat(ARROW_SIZE)
-        let halfArrowSize = arrowSize / CGFloat(2.0)
+        let halfArrowSize = arrowHeight / CGFloat(2.0)
         
         var trans: CGAffineTransform!
         var rot: CGAffineTransform?
@@ -181,13 +204,13 @@ class BubbleView: UIView {
             trans = CGAffineTransform(translationX: size.width/2 - halfArrowSize + arrowOffset, y: 0)
         } else if (arrowPosition == .bottom) {
             rot = CGAffineTransform(rotationAngle: CGFloat.pi)
-            trans = CGAffineTransform(translationX: size.width/2 + halfArrowSize + arrowOffset, y: size.height + arrowSize)
+            trans = CGAffineTransform(translationX: size.width/2 + halfArrowSize + arrowOffset, y: size.height + arrowHeight)
         } else if (arrowPosition == .left) {
-            rot = CGAffineTransform(rotationAngle: CGFloat.pi * CGFloat(1.5))
-            trans = CGAffineTransform(translationX: 0, y: (size.height + arrowSize) / 2)
+            rot = CGAffineTransform(rotationAngle: CGFloat.pi * 1.5)
+            trans = CGAffineTransform(translationX: 0, y: (size.height + arrowHeight) / 2)
         } else if (arrowPosition == .right) {
-            rot = CGAffineTransform(rotationAngle: CGFloat.pi * CGFloat(0.5))
-            trans = CGAffineTransform(translationX: size.width + arrowSize, y: (size.height - arrowSize) / 2)
+            rot = CGAffineTransform(rotationAngle: CGFloat.pi * 0.5)
+            trans = CGAffineTransform(translationX: size.width + arrowHeight, y: (size.height - arrowHeight) / 2)
         }
         
         if let rotationTransform = rot {
@@ -201,16 +224,15 @@ class BubbleView: UIView {
         path.stroke()
         ctx.restoreGState()
     }
-
+        
+    /// Start bounce animation
     func animate() {
         UIView.animate(withDuration: 2.0, delay: 0.3, options: [.repeat, .autoreverse], animations: {
             self.transform = CGAffineTransform(translationX: 0, y: -5)
         }, completion: nil)
     }
     
-    /**
-     Check if bubble is going off the screen using the position and size. If it is, return true
-     */
+    /// Check if bubble is going off the screen using the position and size. If it is, return true
     func fixFrameIfOutOfBounds() {
         guard let window = UIApplication.shared.keyWindow?.frame else {
             print("Couldn't get app window")
@@ -247,14 +269,14 @@ class BubbleView: UIView {
             arrowPosition = .bottom
             
             // Restart the entire process
-            let flippedFrame = calculateFrame(with: font)
+            let flippedFrame = bubbleViewFrame
             y = flippedFrame.origin.y
             height = flippedFrame.size.height
         } else if (arrowPosition == .bottom && y < 0) {
             arrowPosition = .top
             
             // Restart the entire process
-            let flippedFrame = calculateFrame(with: font)
+            let flippedFrame = bubbleViewFrame
             y = flippedFrame.origin.y
             height = flippedFrame.size.height
         }
