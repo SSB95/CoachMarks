@@ -6,5 +6,6 @@ target 'CoachMarksExample' do
   use_frameworks!
 
   # Pods for CoachMarksExample
-  pod 'CoachMarks', :path => '../Source'
+  # pod 'CoachMarks', :git => 'https://github.com/ddoria921/CoachMarks.git', :branch => 'master'
+  pod 'CoachMarks', :path => '../.'
 end
