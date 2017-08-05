@@ -1,0 +1,6 @@
+framework module Pods_CoachMarksExample {
+  umbrella header "Pods-CoachMarksExample-umbrella.h"
+
+  export *
+  module * { export * }
+}

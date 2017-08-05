@@ -19,9 +19,9 @@ protocol CoachMarksViewDelegate: class {
 }
 
 /// Handles cycling through and displaying CoachMarks
-class CoachMarksView: UIView {
+public class CoachMarksView: UIView {
     
-    typealias CoachMark = [String:Any]
+    public typealias CoachMark = [String:Any]
     
     // MARK:- Properties
     
@@ -45,7 +45,7 @@ class CoachMarksView: UIView {
     
     // MARK:- Init
     
-    init(frame: CGRect, coachMarks: [CoachMark]) {
+    public init(frame: CGRect, coachMarks: [CoachMark]) {
         
         self.coachMarks = coachMarks
         self.overlay = CAShapeLayer()
@@ -54,7 +54,7 @@ class CoachMarksView: UIView {
         setup()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -77,7 +77,7 @@ class CoachMarksView: UIView {
     }
     
     /// Starts CoachMark process with first CoachMark
-    func start() {
+    public func start() {
         
         guard coachMarks.count > 0 else {
             return
@@ -291,7 +291,7 @@ class CoachMarksView: UIView {
 // MARK:- CAAnimation Delegate
 
 extension CoachMarksView: CAAnimationDelegate {
-    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+    public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         delegate?.coachMarksView(self, didNavigateTo: markIndex)
     }
 }

@@ -10,6 +10,9 @@
 		93674F691EF0D996000C8E45 /* CoachMarks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93674F5F1EF0D996000C8E45 /* CoachMarks.framework */; };
 		93674F6E1EF0D996000C8E45 /* CoachMarksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93674F6D1EF0D996000C8E45 /* CoachMarksTests.swift */; };
 		93674F701EF0D996000C8E45 /* CoachMarks.h in Headers */ = {isa = PBXBuildFile; fileRef = 93674F621EF0D996000C8E45 /* CoachMarks.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		93D7024C1F362D2700DF3D74 /* BubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D702491F362D2700DF3D74 /* BubbleView.swift */; };
+		93D7024D1F362D2700DF3D74 /* CoachMarksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7024A1F362D2700DF3D74 /* CoachMarksView.swift */; };
+		93D7024E1F362D2700DF3D74 /* FocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7024B1F362D2700DF3D74 /* FocusView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +32,9 @@
 		93674F681EF0D996000C8E45 /* CoachMarksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoachMarksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		93674F6D1EF0D996000C8E45 /* CoachMarksTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachMarksTests.swift; sourceTree = "<group>"; };
 		93674F6F1EF0D996000C8E45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		93D702491F362D2700DF3D74 /* BubbleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleView.swift; sourceTree = "<group>"; };
+		93D7024A1F362D2700DF3D74 /* CoachMarksView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoachMarksView.swift; sourceTree = "<group>"; };
+		93D7024B1F362D2700DF3D74 /* FocusView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +77,9 @@
 		93674F611EF0D996000C8E45 /* CoachMarks */ = {
 			isa = PBXGroup;
 			children = (
+				93D702491F362D2700DF3D74 /* BubbleView.swift */,
+				93D7024A1F362D2700DF3D74 /* CoachMarksView.swift */,
+				93D7024B1F362D2700DF3D74 /* FocusView.swift */,
 				93674F621EF0D996000C8E45 /* CoachMarks.h */,
 				93674F631EF0D996000C8E45 /* Info.plist */,
 			);
@@ -149,6 +158,7 @@
 					93674F5E1EF0D996000C8E45 = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = E666Y9RBZF;
+						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
 					};
 					93674F671EF0D996000C8E45 = {
@@ -198,6 +208,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93D7024D1F362D2700DF3D74 /* CoachMarksView.swift in Sources */,
+				93D7024C1F362D2700DF3D74 /* BubbleView.swift in Sources */,
+				93D7024E1F362D2700DF3D74 /* FocusView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,6 +335,7 @@
 		93674F741EF0D996000C8E45 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = E666Y9RBZF;
@@ -334,6 +348,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ddoria921.CoachMarks;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -341,6 +356,7 @@
 		93674F751EF0D996000C8E45 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = E666Y9RBZF;
@@ -360,6 +376,7 @@
 		93674F771EF0D996000C8E45 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = E666Y9RBZF;
 				INFOPLIST_FILE = CoachMarksTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -372,6 +389,7 @@
 		93674F781EF0D996000C8E45 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = E666Y9RBZF;
 				INFOPLIST_FILE = CoachMarksTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -400,6 +418,7 @@
 				93674F751EF0D996000C8E45 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		93674F761EF0D996000C8E45 /* Build configuration list for PBXNativeTarget "CoachMarksTests" */ = {
 			isa = XCConfigurationList;
@@ -408,6 +427,7 @@
 				93674F781EF0D996000C8E45 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

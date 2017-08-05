@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoachMarks
 
 class ViewController: UIViewController {
 

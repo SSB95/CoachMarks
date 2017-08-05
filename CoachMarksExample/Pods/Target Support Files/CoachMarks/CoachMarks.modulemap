@@ -1,0 +1,6 @@
+framework module CoachMarks {
+  umbrella header "CoachMarks-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "CoachMarks",
+  "version": "1.0.0",
+  "summary": "Quick and easy coach marks built in Swift.",
+  "description": "Guide your users through features in your app in an interactive way.",
+  "homepage": "https://github.com/ddoria921/CoachMarks",
+  "license": "MIT",
+  "authors": [
+    "Darin Doria",
+    "Tulio Troncoso"
+  ],
+  "platforms": {
+    "ios": null
+  },
+  "source": {
+    "path": "."
+  },
+  "source_files": [
+    "CoachMarks",
+    "CoachMarks/**/*.{h,m,swift}"
+  ],
+  "pod_target_xcconfig": {
+    "SWIFT_VERSION": "3"
+  }
+}

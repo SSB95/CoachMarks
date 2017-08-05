@@ -1,0 +1,16 @@
+PODS:
+  - CoachMarks (1.0.0)
+
+DEPENDENCIES:
+  - CoachMarks (from `../Source`)
+
+EXTERNAL SOURCES:
+  CoachMarks:
+    :path: ../Source
+
+SPEC CHECKSUMS:
+  CoachMarks: 4ab6f1270fe58287b07123f9b19cfcd702a137c9
+
+PODFILE CHECKSUM: 87e8bfa2a950315860d37bcf83e33ad1f96f6a57
+
+COCOAPODS: 1.3.0
