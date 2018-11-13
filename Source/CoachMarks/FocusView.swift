@@ -58,7 +58,7 @@ class FocusView: UIView {
         animateSwipe()
     }
     
-    func animateSwipe() {
+    @objc func animateSwipe() {
         guard !animationShouldStop else {
             return
         }

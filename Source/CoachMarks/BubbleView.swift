@@ -123,7 +123,7 @@ class BubbleView: UIView {
         }
         
         let boundingSize = CGSize(width: frame.size.width - widthDelta - textPadding * 3.0, height: CGFloat.greatestFiniteMagnitude)
-        let result = NSString(string: text!).boundingRect(with: boundingSize, options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName : font], context: nil).size
+        let result = NSString(string: text!).boundingRect(with: boundingSize, options: .usesLineFragmentOrigin, attributes: convertToOptionalNSAttributedStringKeyDictionary([convertFromNSAttributedStringKey(NSAttributedString.Key.font) : font]), context: nil).size
         
         return CGSize(width: result.width + textPadding * 3.0, height: result.height + textPadding * 2.5)
     }
@@ -283,4 +283,15 @@ class BubbleView: UIView {
         
         frame = CGRect(x: x, y: y, width: width, height: height)
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
 }

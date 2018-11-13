@@ -61,7 +61,7 @@ public class CoachMarksView: UIView {
     /// Configures overlay and touch gesture recognizers
     func setup() {
         // Overlay config
-        overlay.fillRule = kCAFillRuleEvenOdd
+        overlay.fillRule = CAShapeLayerFillRule.evenOdd
         overlay.fillColor = UIColor(white: 0.0, alpha: 0.8).cgColor
         layer.addSublayer(overlay)
         
@@ -140,10 +140,10 @@ public class CoachMarksView: UIView {
         // Animate it
         let anim = CABasicAnimation(keyPath: "path")
         anim.delegate = self
-        anim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+        anim.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
         anim.duration = CFTimeInterval(animationDuration)
         anim.isRemovedOnCompletion = false
-        anim.fillMode = kCAFillModeForwards
+        anim.fillMode = CAMediaTimingFillMode.forwards
         anim.fromValue = overlay.path
         anim.toValue = maskPath.cgPath
         overlay.add(anim, forKey: "path")
@@ -257,7 +257,7 @@ public class CoachMarksView: UIView {
     
     // MARK:- Gestures
     
-    func userDidTap(_ recognizer: UIGestureRecognizer) {
+    @objc func userDidTap(_ recognizer: UIGestureRecognizer) {
         delegate?.didTap(at: markIndex)
         
         // Go to the next coach mark

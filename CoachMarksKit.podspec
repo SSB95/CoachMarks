@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "CoachMarksKit"
-  s.version      = "1.0.2"
+  s.version      = "1.0.3"
   s.summary      = "Quick and easy coach marks built in Swift."
 
   # This description is used to generate tags and improve search results.
@@ -136,6 +136,6 @@ Pod::Spec.new do |s|
   # s.dependency "JSONKit", "~> 1.4"
 
 
-  s.pod_target_xcconfig = { "SWIFT_VERSION" => "3.2" }
+  s.pod_target_xcconfig = { "SWIFT_VERSION" => "4.2" }
 
 end
